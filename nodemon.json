@@ -1,0 +1,10 @@
+{
+    "restartable": "rs",
+    "ignore": [
+        "sessions",
+        "logs",
+        "static"
+    ],
+    "verbose": true,
+    "legacy-watch": false
+}
