@@ -11,14 +11,19 @@ const Article = db.define('article', {
   id: { type: Sequelize.STRING, primaryKey: true },
   create_at: { type: Sequelize.NOW },
   update_at: { type: Sequelize.NOW },
-  is_deleted: { type: Sequelize.TINYINT, defaultValue: 0 }
+  is_deleted: { type: Sequelize.TINYINT, defaultValue: 0 },
+  publish_date: { type: Sequelize.DATE },
+  title: { type: Sequelize.STRING, defaultValue: '' },
+  html: { type: Sequelize.STRING, defaultValue: '' },
+  text: { type: Sequelize.STRING, defaultValue: '' },
+  thumbnail: { type: Sequelize.STRING, defaultValue: '' }
 })
 
 /**
  * 获取文章列表
  * @param {*} userId
  */
-Article.queryAll = function(queryData) {
+Article.getArticleList = function(queryData) {
   return new Promise(function(resolve, reject) {
     Article.findAll({
       where: {
@@ -33,6 +38,26 @@ Article.queryAll = function(queryData) {
         reject(e)
       })
   })
+}
+
+/**
+ * 获取文详情
+ * @param {*} id
+ */
+Article.getArticleDetail = function(id) {
+  return Article.findOne({
+    where: {
+      id: id
+    }
+  })
+}
+
+/**
+ * 添加文章
+ * @param {s} articleJson
+ */
+Article.addArticle = function(articleJson) {
+  return Article.create(articleJson)
 }
 
 module.exports = Article
