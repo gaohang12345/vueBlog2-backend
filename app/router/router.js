@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 router.get('/getRandomAvatar', commonCtl.getRandomAvatar)
 
 // 登录
-router.post('/doLogin', loginCtl.doLogin)
+router.post('/login', loginCtl.doLogin)
 
 // 注册
 router.post('/userReg', loginCtl.userRegister)

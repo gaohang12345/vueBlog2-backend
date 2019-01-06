@@ -1,7 +1,6 @@
 const util = require('../service/util')
 const logger = require('../service/logger').getLogger('login.js')
-const LoginUser = require('../model/login_user')
-const User = require('../model/user')
+const User = require('../model/user_info')
 
 const AuthService = require('../service/authService')
 
@@ -12,15 +11,16 @@ const AuthService = require('../service/authService')
  * @param {*} res
  */
 async function doLogin(req, res) {
-  // let mobile = req.body.mobile
-  // let vcode = req.body.vcode
+  let user = {
+    id: 1,
+    username: 'admin',
+    password: '123456',
+    avatar:
+      'https://raw.githubusercontent.com/taylorchen709/markdown-images/master/vueadmin/user.png',
+    name: '张某某'
+  }
 
-  // // 检查vcode 是否合法
-  // let userInfo = {}
-
-  // // 记录登录时间
-  // res.json({ code: 0, msg: "ok", data: userInfo })
-  await userRegister(req, res)
+  res.json({ code: 0, msg: '登陆成功！', data: user })
 }
 
 /**
@@ -32,35 +32,10 @@ async function doLogin(req, res) {
 async function userRegister(req, res) {
   let data = req.body
   try {
-    let mobile = data.mobile
-    let vcode = data.vcode
-    data.last_login_ip = util.getIP(req)
-    // 检查 code 是否有效，否则返回错误
-    let dbVCode = await LoginVCode.checkCode(mobile, vcode)
-    console.info(mobile + ' ' + vcode)
-    if (!dbVCode && '1024' !== vcode) {
-      res.json({ code: -1, msg: '验证码无效！' })
-      return
-    }
-    let token = ''
-    LoginVCode.updateStatus(mobile, vcode)
-    // 根据手机号获取用户信息
-    let user = await User.getByMobile(mobile)
-    // console.info(user)
-    if (user) {
-      //
-      token = await AuthService.getToken(user)
-      res.send({ code: 0, msg: 'ok', data: { user: user, token: token } })
-      // 更新最后登录时间
-      LoginUser.updateLastLogin(data)
-      return
-    }
-    user = await LoginUser.createLoginUser(data)
-    if (user) {
-      // 注册成功，获取信息
-      token = await AuthService.getToken(user)
-      user = await User.getByMobile(mobile)
-    }
+    // 注册成功，获取信息
+    token = await AuthService.getToken(user)
+    user = await User.getByMobile(mobile)
+
     res.json({ code: 0, msg: 'ok', data: { user: user, token: token } })
   } catch (e) {
     logger.error(e)

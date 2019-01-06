@@ -12,11 +12,15 @@ const Article = db.define('article', {
   create_at: { type: Sequelize.NOW },
   update_at: { type: Sequelize.NOW },
   is_deleted: { type: Sequelize.TINYINT, defaultValue: 0 },
-  publish_date: { type: Sequelize.DATE },
+  publish_date: { type: Sequelize.NOW },
   title: { type: Sequelize.STRING, defaultValue: '' },
   html: { type: Sequelize.STRING, defaultValue: '' },
   text: { type: Sequelize.STRING, defaultValue: '' },
-  thumbnail: { type: Sequelize.STRING, defaultValue: '' }
+  article_type_title: { type: Sequelize.STRING, defaultValue: '' },
+  article_type_id: { type: Sequelize.STRING, defaultValue: '' },
+  article_desc: { type: Sequelize.STRING, defaultValue: '' },
+  thumbnail: { type: Sequelize.STRING, defaultValue: '' },
+  status: { type: Sequelize.TINYINT, defaultValue: 1 }
 })
 
 /**
@@ -47,6 +51,7 @@ Article.getArticleList = function(queryData) {
 Article.getArticleDetail = function(id) {
   return Article.findOne({
     where: {
+      is_deleted: 0,
       id: id
     }
   })
